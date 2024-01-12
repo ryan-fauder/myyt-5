@@ -1,0 +1,12 @@
+<h1>My Youtube</h1>
+<button mat-raised-button color="warn" [routerLink]="['upload']">
+    <mat-icon>upload</mat-icon>
+    Upload
+</button>
+@if(videoUrl){
+    <video width="320" height="240" controls autoplay>
+        <source [src]="videoUrl" type="video/mp4">
+        O navegador não suporta o vídeo
+    </video>
+}
+<app-lista-videos [videos]="videos$ | async" (selectVideo)="playVideo($event)"></app-lista-videos>

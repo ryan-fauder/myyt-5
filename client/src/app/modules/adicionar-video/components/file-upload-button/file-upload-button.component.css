@@ -1,0 +1,6 @@
+.file-upload{
+    display: flex;
+}
+.file-input{
+    display: none;
+}

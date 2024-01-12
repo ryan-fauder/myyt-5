@@ -1,0 +1,14 @@
+<section>
+    @if(videos){
+        <h3>Lista de vídeos</h3>
+        <mat-list>
+            @for(video of videos; track video.id){
+                <mat-list-item>
+                    <span matListItemTitle class="clickable" (click)="playVideo($event, video.id)">{{video.title}}</span>
+                    <span matListItemLine>ID: {{video.id}}</span>
+                    <span matListItemLine>Tamanho: {{video.size}}</span>
+                </mat-list-item>
+            }
+        </mat-list>
+    }
+</section>

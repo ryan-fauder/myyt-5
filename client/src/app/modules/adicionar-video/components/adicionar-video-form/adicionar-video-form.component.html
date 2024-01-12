@@ -1,0 +1,46 @@
+<h2>Upload video</h2>
+<form [formGroup]="videoForm" (submit)="submitForm($event)">
+    <div class="flex-container">
+        <mat-form-field
+            class="input-container"
+            appearance="outline"
+            floatLabel="always"
+        >
+            <mat-label>Title</mat-label>
+            <input
+                matInput
+                placeholder="Enter a title"
+                formControlName="title"
+            >
+        </mat-form-field>
+    </div>
+    <div class="flex-container">
+        <mat-form-field
+            class="input-container"
+            appearance="outline"
+            floatLabel="always"
+        >    
+            <mat-label>Description</mat-label>
+            <textarea
+                matInput
+                placeholder="Enter a description"
+                formControlName="description"
+            ></textarea>
+        </mat-form-field>
+    </div>
+
+    <div class="flex-container">
+        <app-file-upload-button></app-file-upload-button>
+    </div>
+    <div class="flex-container">
+        <button
+            mat-raised-button
+            color="warn"
+            class="flex-button"
+            type="submit"
+        >
+                <mat-icon>upload</mat-icon>
+                Upload video
+        </button>
+    </div>
+</form>
