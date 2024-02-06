@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './video-preview.component.css'
 })
 export class VideoPreviewComponent {
-
 }

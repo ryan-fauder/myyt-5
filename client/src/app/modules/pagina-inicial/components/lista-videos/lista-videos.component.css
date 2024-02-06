@@ -1,6 +1,9 @@
-.clickable{
+.lista-videos {
+    padding: 2rem;
+}
+.clickable {
     cursor: pointer;
 }
-.clickable:hover{
+.clickable:hover {
     opacity: 90%;
 }

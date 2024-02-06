@@ -3,6 +3,7 @@ import { FormControl } from "@angular/forms"
 export interface Video {
     id: number,
     title: string,
+    description?: string,
     blob?: Blob,
     size?: number
 }

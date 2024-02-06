@@ -1,18 +1,21 @@
-<mat-form-field
-    class="input-container"
-    appearance="outline"
-    floatLabel="always"
->
-    <input type="file" class="file-input"
-    (change)="onFileSelected($event)" #fileUpload>
-    
+<div class="file-upload-container">
+    <input
+        type="file"
+        class="file-input"
+        (change)="updateValue($event)"
+        #fileUpload
+        accept=".mp4"
+    >
     <div class="file-upload">
-    
-        {{fileName || "No file uploaded"}}
-    
-        <button mat-mini-fab color="primary" class="upload-btn"
-        (click)="fileUpload.click()">
+        {{fileName || "Nenhum arquivo selecionado"}}
+        <button
+            mat-mini-fab
+            color="primary"
+            class="upload-btn"
+            type="button"
+            (click)="fileUpload.click()"
+        >
             <mat-icon>attach_file</mat-icon>
         </button>
     </div>
-</mat-form-field>
+</div>

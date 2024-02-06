@@ -1,12 +1,17 @@
-<h1>My Youtube</h1>
-<button mat-raised-button color="warn" [routerLink]="['upload']">
-    <mat-icon>upload</mat-icon>
-    Upload
-</button>
-@if(videoUrl){
-    <video width="320" height="240" controls autoplay>
-        <source [src]="videoUrl" type="video/mp4">
-        O navegador não suporta o vídeo
-    </video>
-}
-<app-lista-videos [videos]="videos$ | async" (selectVideo)="playVideo($event)"></app-lista-videos>
+<mat-toolbar>
+    <mat-toolbar-row>
+    <mat-icon>play_arrow</mat-icon>
+      <h2>My Youtube 5</h2>
+      <span class="example-spacer"></span>
+      <button mat-raised-button color="warn" [routerLink]="['upload']">
+        <mat-icon>upload</mat-icon>
+        Upload
+    </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+<main class="main-container">
+    @if(videoUrl){
+        <app-video-player [url]="videoUrl" [videoInfo]="videoInfo$ | async"></app-video-player>
+    }
+    <app-lista-videos [videos]="videos$ | async" (selectVideo)="playVideo($event)"></app-lista-videos>
+</main>

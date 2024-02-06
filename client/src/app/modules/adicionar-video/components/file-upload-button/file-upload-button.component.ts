@@ -1,11 +1,13 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { Component, Input } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, forwardRef } from '@angular/core';
+import { AbstractControlDirective, ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Subscription, finalize } from 'rxjs';
+import { Observable, Subject, Subscription, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-file-upload-button',
@@ -18,52 +20,28 @@ import { Subscription, finalize } from 'rxjs';
     MatFormFieldModule,
   ],
   templateUrl: './file-upload-button.component.html',
-  styleUrl: './file-upload-button.component.css'
+  styleUrl: './file-upload-button.component.css',
+  providers: [
+  {
+    provide: MatFormFieldControl,
+    useExisting: forwardRef(() => FileUploadButtonComponent)
+  }
+  ]
 })
 export class FileUploadButtonComponent {
+  
+  public fileName: string = '';
+  public value: File | null = null;
 
-  @Input()
-  requiredFileType: string | null = null;
+  @Output() handleFile = new EventEmitter<File>();
 
-  fileName = '';
-  uploadProgress: number | null = 0;
-  uploadSub: Subscription | null = null;
-
-  constructor(private _http: HttpClient) { }
-
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-
-    if (file) {
+  updateValue(event: any): void {
+    const file: File = event?.target.files[0];
+    if(file){
       this.fileName = file.name;
-      const formData = new FormData();
-      formData.append("thumbnail", file);
-
-      const upload$ = this._http.post("/api/thumbnail-upload", formData, {
-        reportProgress: true,
-        observe: 'events'
-      })
-        .pipe(
-          finalize(() => this.reset())
-        );
-
-      this.uploadSub = upload$.subscribe(event => {
-        if (event.type == HttpEventType.UploadProgress) {
-          this.uploadProgress = Math.round(100 * (event.loaded / (event?.total ?? 1)));
-        }
-      })
+      this.value = file;
+      this.handleFile.emit(file);
     }
   }
 
-  cancelUpload() {
-    if(this.uploadSub){
-      this.uploadSub.unsubscribe();
-      this.reset();
-    }
-  }
-
-  reset() {
-    this.uploadProgress = null;
-    this.uploadSub = null;
-  }
 }

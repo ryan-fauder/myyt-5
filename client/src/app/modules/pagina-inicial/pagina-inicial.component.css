@@ -1,0 +1,16 @@
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.mat-toolbar {
+    background-color: #1E1E1E;
+    color: white;
+    padding: 0 4rem;
+}
+
+.main-container {
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    justify-content: center;
+}

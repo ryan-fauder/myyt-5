@@ -1,5 +1,5 @@
 <h2>Upload video</h2>
-<form [formGroup]="videoForm" (submit)="submitForm($event)">
+<form [formGroup]="videoForm" (submit)="submitForm($event)" class="adicionar-form">
     <div class="flex-container">
         <mat-form-field
             class="input-container"
@@ -30,7 +30,7 @@
     </div>
 
     <div class="flex-container">
-        <app-file-upload-button></app-file-upload-button>
+            <app-file-upload-button (handleFile)="handleFile($event)"></app-file-upload-button>
     </div>
     <div class="flex-container">
         <button
@@ -38,6 +38,7 @@
             color="warn"
             class="flex-button"
             type="submit"
+            [disabled]="!videoForm.valid"
         >
                 <mat-icon>upload</mat-icon>
                 Upload video
