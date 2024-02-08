@@ -19,7 +19,7 @@ class ReplicationController(rpyc.Service):
         body['id'] = video.id
         response = ReplicationService.store(body)
         if(response):
-            return video
+            return video.dict()
     @rpyc.exposed
     def index(self):
         videos = ReplicationController.videoInfoDAO.list()

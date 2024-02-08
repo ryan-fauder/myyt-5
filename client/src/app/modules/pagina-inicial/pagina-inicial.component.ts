@@ -34,6 +34,7 @@ export class PaginaInicialComponent {
   constructor(private _videoService: VideoService){}
   ngDoCheck(): void {
     console.log('VideoToPlay: ', this.videoToPlay);
+    console.log('VideoURL: ', this.videoUrl);
     
   }
 

@@ -1,7 +1,7 @@
 import time
 import rpyc
 
-from interfaces.datanode import VideoDTO
+from datanode import VideoDTO
 
 class Replikate:
     def __init__(self, service_name):

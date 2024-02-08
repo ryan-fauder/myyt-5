@@ -1,7 +1,7 @@
 from dao.datanodeDAO import DataNodeDAO
 from dao.videoInfoDAO import VideoInfoDAO
-from modules.message import Request, Response
-from modules.monitorate import Monitorate
+from modules.message.src import Request, Response
+from modules.monitorate.src import Monitorate
 from session import session
 
 class LoadBalancerService:

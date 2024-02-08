@@ -1,0 +1,1 @@
+STATISTICS_LOCATION = './statistics'

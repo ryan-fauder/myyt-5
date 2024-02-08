@@ -28,7 +28,7 @@ class ReplicationService:
                 response = datanode_server.store(video['id'], video['title'], video['description'], video['blob'], video['size'])
                 if(response):
                     ReplicationService.videoInfoDAO.associateDatanode(id, datanode)
-            return video
+            return response
         except Exception as e:
             print('Um erro na replicação ocorreu')
 
