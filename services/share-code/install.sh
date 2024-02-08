@@ -1,10 +1,10 @@
 #!/bin/bash
 cd ~
-if ! [ -d sistemas_distribuidos ]
+if ! [ -d myyoutube ]
 then
-    mkdir sistemas_distribuidos
+    mkdir myyoutube
 fi
-cd sistemas_distribuidos
+cd myyoutube
 
 if ! [ -d myyt-3 ]
 then
