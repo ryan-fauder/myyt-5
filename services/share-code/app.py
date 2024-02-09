@@ -20,6 +20,8 @@ if __name__ == "__main__":
         print("share-code (ERROR): Nenhum endereço foi encontrado no arquivo de endereços")
         sys.exit(1)
     
+    run_command("chmod +x ./run.exp")
+    run_command("chmod +x ./install.exp")
     for address in addresses:
         command = f"./run.exp {address} &"
         run_command(command)

@@ -19,7 +19,7 @@ else
     rm ./alias.txt
 fi
 echo "Instalando dependencias"
-pip install rpyc, alembic, flask, sqlalchemy
+pip install rpyc alembic flask sqlalchemy
 
 if ! [ -d database ]
 then

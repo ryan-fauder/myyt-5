@@ -1,7 +1,7 @@
 from rpyc.utils.server import ThreadedServer
 
 from controllers.videoController import VideoController
-from modules.monitorate.src import Monitorate
+from modules.monitorate import Monitorate
 from services.aliasManager import get_alias
 import threading
 

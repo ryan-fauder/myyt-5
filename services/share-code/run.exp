@@ -1,5 +1,5 @@
 #!/bin/expect
-echo "Replicando codigo"
+puts "Replicando codigo"
 exp_internal 1
 
 # Check if the correct number of arguments is provided
@@ -30,7 +30,7 @@ expect {
         send "$password\r"
     }
 }
-echo "SSH foi conectado"
+puts "SSH foi conectado"
 
 expect "?*$?*"
 
