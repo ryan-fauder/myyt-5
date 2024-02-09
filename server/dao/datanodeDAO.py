@@ -29,11 +29,11 @@ class DataNodeDAO:
         finally:
             self.sessao.close()
 
-    def add(self, alias, commit=True):
+    def add(self, id = None, alias = None, commit=True):
         try:
             datanode = self.find(alias)
             if not datanode:
-                datanode = DataNode(alias=alias)
+                datanode = DataNode(id=id, alias=alias)
                 self.sessao.add(datanode)
                 
                 if commit:

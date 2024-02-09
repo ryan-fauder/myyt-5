@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from environment import DATABASE_URL
 
 def create_session():
-    engine = create_engine(DATABASE_URL, echo=True)
+    engine = create_engine(DATABASE_URL, echo=False)
     Session = sessionmaker(bind=engine)
     return scoped_session(Session)
 

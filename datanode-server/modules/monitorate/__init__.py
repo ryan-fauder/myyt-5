@@ -1,6 +1,6 @@
 import rpyc
 import time
-from monitor import AbstractMonitor
+from .monitor import AbstractMonitor
 
 class Monitorate:
     monitor_alias = 'MONITOR_SERVER'

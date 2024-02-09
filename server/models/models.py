@@ -21,6 +21,7 @@ class DataNode(Base):
     __tablename__ = 'datanode'
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     alias: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(Enum('Online', 'Offline', 'Busy'), default='Online') # Online, Offline, Busy
     videoinfos: Mapped[List["VideoInfo"]] = relationship(
         secondary=datanode_videoinfo_association, back_populates="datanodes"
     )

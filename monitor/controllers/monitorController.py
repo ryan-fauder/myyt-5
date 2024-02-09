@@ -1,5 +1,5 @@
 from dao.datanodeDAO import DataNodeDAO
-from environment import DATANOODLE_DATANODE_MANAGER_ALIASES
+from environment import DATANOODLE_MANAGER_ALIASES
 from modules.datanoodle import Datanoodle
 from modules.monitorate import AbstractMonitor
 from session import create_session
@@ -11,7 +11,7 @@ class MonitorController(rpyc.Service, AbstractMonitor):
 
     def connects_datanode_manager(self):
         try:
-            return Datanoodle(DATANOODLE_DATANODE_MANAGER_ALIASES)
+            return Datanoodle(DATANOODLE_MANAGER_ALIASES)
         except Exception as e:
             raise e
 

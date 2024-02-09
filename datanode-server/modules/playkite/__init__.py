@@ -1,8 +1,7 @@
 from typing import Generator
 import rpyc
 
-from playkite import AbstractPlaykite
-
+from .playkite import AbstractPlaykite
 from .interfaces import VideoDTO, InvalidServiceNameError
 
 class Playkite:
