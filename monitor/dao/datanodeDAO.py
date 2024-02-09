@@ -65,7 +65,7 @@ class DataNodeDAO:
         try:
             datanode = DataNode(alias="DATANODE")
             self.sessao.add(datanode)
-            self.sessao.flush()
+            self.sessao.rollback()
             return datanode.id
         except SQLAlchemyError as e:
             self.sessao.rollback()
