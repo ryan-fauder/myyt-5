@@ -5,8 +5,6 @@ from .datanode import VideoDTO
 import time
 import rpyc
 
-from datanode import VideoDTO
-
 class Replikate:
     def __init__(self, service_name):
         try:
