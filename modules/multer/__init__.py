@@ -3,9 +3,9 @@ from typing import Generator
 import uuid
 
 class Multer:
-    def __init__(self, path=''):
+    def __init__(self, path='', chunk_size = 2 ** 20):
         self.path = path
-
+        self.chunk_size = chunk_size
     @staticmethod
     def create_filename():
         random_name = str(uuid.uuid4())
@@ -25,7 +25,7 @@ class Multer:
     def read_file(self, filename: str):
         def file_reader(file):
             while True:
-                chunk = file.read(1024)
+                chunk = file.read(self.chunk_size)
                 if not chunk:
                     break
                 yield chunk
