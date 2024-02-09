@@ -10,4 +10,4 @@ ALIAS_FILE = 'alias.txt'
 UPLOAD_FILE_PATH = './database/uploads'
 
 # MONITORING
-INTERVAL_PING = 1
+INTERVAL_PING = 0.3
