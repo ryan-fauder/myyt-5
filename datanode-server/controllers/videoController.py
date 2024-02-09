@@ -18,8 +18,8 @@ class VideoController(rpyc.Service, AbstractPlaykite):
             file_generator = body['file_generator']
             size = body['size']
             session = create_session()
+            path = self.multer.write_file(file_generator)
             with VideoDAO(session) as dao:
-                path = self.multer.write_file(file_generator)
                 new_video = dao.add(id, title, description, path, size)
                 return new_video.dict()
         except Exception as e:
@@ -62,7 +62,7 @@ class VideoController(rpyc.Service, AbstractPlaykite):
         session = create_session()
         with VideoDAO(session) as dao:
             video = dao.get(id)
-            if video:
-                filename = video.path.replace(f"{UPLOAD_FILE_PATH}/", "")
-                file_generator = self.multer.read_file(filename)
-                return file_generator            
+        if video:
+            filename = video.path.replace(f"{UPLOAD_FILE_PATH}/", "")
+            file_generator = self.multer.read_file(filename)
+            return file_generator            

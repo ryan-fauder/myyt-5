@@ -19,7 +19,7 @@ else
     rm ./alias.txt
 fi
 echo "Instalando dependencias"
-pip install rpyc alembic flask sqlalchemy
+pip install rpyc alembic flask sqlalchemy matplotlib
 
 if ! [ -d database ]
 then
@@ -33,9 +33,10 @@ else
     alembic upgrade head
 fi
 
-previous_process=$(netstat -nlp | grep 8090 | awk '{print $7}' | perl -pe "s/\/.*//")
-echo previous process = $previous_process
-if [ -n "$previous_process" ]; then kill $previous_process; fi
 echo Starting DATANODE_SERVER
+pkill -f app.py
+
 python3 app.py &
+
 disown
+
