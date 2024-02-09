@@ -1,4 +1,3 @@
-from sqlalchemy import select
 from models import DataNode
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
@@ -64,9 +63,12 @@ class DataNodeDAO:
 
     def next_id(self):
         try:
-            result = self.sessao.execute(select([DataNode.id]))
-            next_id = result.scalar() + 1 if result.scalar() is not None else 1
-            return next_id
+            datanode = DataNode(alias="DATANODE")
+            self.sessao.add(datanode)
+            self.sessao.flush()
+            id = datanode.id
+            self.sessao.rollback()
+            return id
         except SQLAlchemyError as e:
             self.sessao.rollback()
             raise e
