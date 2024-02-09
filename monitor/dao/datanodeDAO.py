@@ -63,11 +63,12 @@ class DataNodeDAO:
 
     def next_id(self):
         try:
-            datanode = DataNode(alias="DATANODE")
+            datanode = DataNode(alias="DT")
             self.sessao.add(datanode)
             self.sessao.flush()
             id = datanode.id
             self.sessao.rollback()
+            print(id)
             return id
         except SQLAlchemyError as e:
             self.sessao.rollback()
