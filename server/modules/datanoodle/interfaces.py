@@ -1,0 +1,2 @@
+class InvalidServiceNameError(Exception):
+    pass

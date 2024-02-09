@@ -1,6 +1,10 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from environment import DATABASE_URL
-engine = create_engine(DATABASE_URL, echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
+
+def create_session():
+    engine = create_engine(DATABASE_URL, echo=True)
+    Session = sessionmaker(bind=engine)
+    return scoped_session(Session)
+
+global_session = create_session()

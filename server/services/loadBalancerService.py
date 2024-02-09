@@ -1,40 +1,61 @@
 from dao.datanodeDAO import DataNodeDAO
 from dao.videoInfoDAO import VideoInfoDAO
-from modules.message.src import Request, Response
-from modules.monitorate.src import Monitorate
-from session import session
+from modules.monitorate import Monitorate
+from session import create_session
 
 class LoadBalancerService:
     replica_factor = 3
-    videoInfoDAO = VideoInfoDAO(session)
-    datanodeDAO = DataNodeDAO(session)
 
-    def check_datanodes(self, datanodes):
+    def filter_online_datanodes(self, datanodes):
         selected_datanodes = []
-        monitorate = Monitorate()
-        for datanode in datanodes:
-            id, alias = datanode
-            if monitorate.check_online(id, alias):
-                selected_datanodes.append(alias)
-                if len(selected_datanodes) == self.replica_factor:
-                    break
+        try:
+            monitorate = Monitorate()
+            for datanode in datanodes:
+                id, alias = datanode
+                try:
+                    if monitorate.check_online(id, alias):
+                        selected_datanodes.append(alias)
+                        if len(selected_datanodes) == self.replica_factor:
+                            break
+                except Exception as e:
+                    raise Exception(f"Falha ao verificar a disponibilidade do DataNode {alias}: {e}")
+        except Exception as e:
+            raise e
+
         return selected_datanodes
 
-    def select_datanodes(self) -> list[tuple[str]]:
-        datanodes = self.datanodeDAO.least_qtt_videos()
-        if datanodes:
-            return self.check_datanodes(datanodes)
-
-    def list_datanodes(self, id_video):
-        datanodes = self.videoInfoDAO.datanodes(id_video)
-        if datanodes:
-            return self.check_datanodes(datanodes)
+    def select_datanodes(self, session = create_session()) -> list[str]:
+        try:
+            with DataNodeDAO(session) as datanode_dao:
+                datanodes = datanode_dao.least_qtt_videos()
+            
+            if datanodes:
+                return self.filter_online_datanodes(datanodes)
+            
+        except Exception as e:
+            print(f"Erro ao selecionar datanodes: {e}")
+            raise e
         return []
+
+    def list_datanodes(self, id_video, session = create_session()):
+        try:
+            with VideoInfoDAO(session) as video_info_dao:
+                datanodes = video_info_dao.datanodes(id_video)
+            
+            if datanodes:
+                return self.filter_online_datanodes(datanodes)
+            
+        except Exception as e:
+            print(f"Erro ao listar datanodes para o vídeo {id_video}: {e}")
+            raise e
+        return []
+
     def find_datanode(self, id_video):
         datanodes = self.list_datanodes(id_video)
         if datanodes:
             return datanodes[0]
         return []
+
 if(__name__ == "__main__"):
     loadBalancer = LoadBalancerService()
     print("LIST")

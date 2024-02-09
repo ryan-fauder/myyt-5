@@ -1,30 +1,33 @@
 import os
 from environment import ALIAS_FILE
+from modules.monitorate import Monitorate
 
-
-def get_local_alias(monitorate):
-    id, alias = None, None
-    if os.path.exists(ALIAS_FILE):
-        with open(ALIAS_FILE, 'r') as f:
-            conteudo = f.read()
-            try:
-                id, alias = map(str.strip, conteudo.split(", "))
+def get_local_alias(monitorate: Monitorate):
+    try:
+        if os.path.exists(ALIAS_FILE):
+            with open(ALIAS_FILE, 'r') as file:
+                content = file.read()
+                id, local_alias = map(str.strip, content.split(", "))
                 id = int(id)
-                if not monitorate.check_alias(id, alias):
-                    print('INVALID ALIAS - aliasManager')
-                    return None, None
-            except ValueError:
-                print('INVALID FILE FORMAT - aliasManager')
-                return None, None
-    return id, alias
-def get_alias(monitorate):
+                return id, local_alias
+    except ValueError:
+        print('ERRO: Formato de arquivo inválido - aliasManager')
+    except Exception as e:
+        print(f'ERRO: {e} - aliasManager')
+    return None, None
+
+def get_alias(monitorate: Monitorate):
     try:
         id, alias = get_local_alias(monitorate)
-        if not id or not alias:
-            id, alias = monitorate.register_datanode()
-            if id and alias:
-                with open(ALIAS_FILE, 'w') as f:
-                    f.write(f"{id}, {alias}")
+
+        if id and alias and monitorate.check_alias(id, alias):
+            return id, alias
+
+        id, alias = monitorate.register_datanode()
+        if id and alias:
+            with open(ALIAS_FILE, 'w') as file:
+                file.write(f"{id}, {alias}")
         return id, alias
-    except:
+    except Exception as e:
+        print(f'ERRO: {e} - aliasManager')
         return None, None

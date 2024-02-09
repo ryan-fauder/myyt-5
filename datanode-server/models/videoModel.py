@@ -11,7 +11,7 @@ class Video(Base):
     title: Mapped[str] = mapped_column(String, nullable=True, default='')
     description: Mapped[str] = mapped_column(String, nullable=True, default='')
     size: Mapped[int] = mapped_column(Integer, default=0)
-    blob: Mapped[bytes] = mapped_column(LargeBinary, default=b'')
+    path: Mapped[str] = mapped_column(String, default='')
     created_at: Mapped[str] = mapped_column(DateTime(timezone=True), default=func.now(), server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp())
   
@@ -19,7 +19,6 @@ class Video(Base):
         return {
             "id": self.id,
             "title": self.title,
-            "blob": self.blob,
             "description": self.description,
             "created_at": self.created_at.strftime("%m/%d/%Y"),
             "size": self.size

@@ -1,42 +1,61 @@
-from dao.videoDAO import VideoDAO
-from session import session
 import rpyc
+from dao.videoDAO import VideoDAO
+from modules.multer import Multer
+from modules.playkite import AbstractPlaykite
+from session import create_session
+from environment import UPLOAD_FILE_PATH
 
 @rpyc.service
-class VideoController(rpyc.Service):
-    videoDAO = VideoDAO(session)
+class VideoController(rpyc.Service, AbstractPlaykite):
+    multer = Multer(UPLOAD_FILE_PATH)
+    
+    @rpyc.exposed
+    def store(self, id, title, description, file_generator, size):
+        try:
+            session = create_session()
+            with VideoDAO(session) as dao:
+                path = self.multer.write_file(file_generator)
+                new_video = dao.add(id, title, description, path, size)
+                return new_video.dict()
+        except Exception as e:
+            raise e
 
     @rpyc.exposed
-    def store(self, id, title, description, blob, size):
-        new_video = VideoController.videoDAO.add(id, title, description, blob, size)
-        del new_video['blob']
-        return new_video
-    
-    @rpyc.exposed
     def index(self):
-        videos = VideoController.videoDAO.list()
-        return videos
-    
+        session = create_session()
+        with VideoDAO(session) as dao:
+            videos = dao.list()
+            return [
+                {"id": id, "title": title, "description": description, "size": size, "created_at": created_at.strftime("%m/%d/%Y")}
+                for (id, title, description, size, created_at) in videos
+            ]
+
     @rpyc.exposed
     def delete(self, id):
-        video_deleted = VideoController.videoDAO.delete(id)
-        del video_deleted['blob']
-        return video_deleted
-    
+        session = create_session()
+        with VideoDAO(session) as dao:
+            video_deleted = dao.delete(id)
+            self.multer.remove_file(video_deleted.path)
+            return video_deleted.dict()
+
     @rpyc.exposed
     def read(self, id):
-        video = VideoController.videoDAO.get(id)
-        del video['blob']
-        return video
-    
+        session = create_session()
+        with VideoDAO(session) as dao:
+            video = dao.get(id)
+            return video.dict()
+
     @rpyc.exposed
     def readByTitle(self, title):
-        video = VideoController.videoDAO.getByTitle(title)
-        del video['blob']
-        return video
-    
+        session = create_session()
+        with VideoDAO(session) as dao:
+            video = dao.getByTitle(title)
+            return video.dict()
+
     @rpyc.exposed
     def stream(self, id):
-        video = VideoController.videoDAO.get(id)
-        blob = video['blob']
-        return blob
+        session = create_session()
+        with VideoDAO(session) as dao:
+            video = dao.get(id)
+            file_generator = self.multer.read_file(video.path)
+            return file_generator            

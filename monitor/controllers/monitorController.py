@@ -1,57 +1,97 @@
-
 from dao.datanodeDAO import DataNodeDAO
-from environment import REPLIKATE_DATANODE_MANAGER_ALIASES
-from modules.replikate import Replikate
-from session import session
+from environment import DATANOODLE_DATANODE_MANAGER_ALIASES
+from modules.datanoodle import Datanoodle
+from modules.monitorate import AbstractMonitor
+from session import create_session
 import rpyc
 
 @rpyc.service
-class MonitorController(rpyc.Service):
+class MonitorController(rpyc.Service, AbstractMonitor):
     ALIASES = ["MONITOR_SERVER"]
-    datanodeDAO = DataNodeDAO(session)
-    replikate: Replikate = None
+
     def connects_datanode_manager(self):
-        return Replikate(REPLIKATE_DATANODE_MANAGER_ALIASES)
+        try:
+            return Datanoodle(DATANOODLE_DATANODE_MANAGER_ALIASES)
+        except Exception as e:
+            raise e
+
     @rpyc.exposed
     def offer(self):
-        # Offering a Alias
-        id = MonitorController.datanodeDAO.next_id()
-        return f"DATANODE_{id}"
-    def store(self, alias):
-        if not self.replikate:
-            self.replikate = self.connects_datanode_manager()
-        datanode = MonitorController.datanodeDAO.add(alias=alias)
-        if not datanode:
-            print("Falha ao adicionar um datanode em MonitorController")
-            return None
-        ack = self.replikate.register_datanode(id=datanode.id, alias=datanode.alias)
-        if not ack:
-            print("Falha ao adicionar um datanode ao DataManagerServer em MonitorController")
-            return None
-        return datanode.id, datanode.alias
+        try:
+            session = create_session()
+            with DataNodeDAO(session) as datanode_dao:
+                id = datanode_dao.next_id()
+                return f"PLAYKITE_{id}"
+        except Exception as e:
+            raise e
+    
+    @rpyc.exposed
+    def store(self, alias: str):
+        try:
+            session = create_session()
+            with DataNodeDAO(session) as datanode_dao:
+                datanoodle = self.connects_datanode_manager()
+
+                datanode = datanode_dao.add(alias=alias)
+                if not datanode:
+                    print("Falha ao adicionar um datanode em MonitorController")
+                    return None
+
+                ack = datanoodle.register_datanode(id=datanode.id, alias=datanode.alias)
+                if not ack:
+                    print("Falha ao adicionar um datanode ao DataManagerServer em MonitorController")
+                    return None
+
+                return datanode.id, datanode.alias
+        except Exception as e:
+            raise e
+
     @rpyc.exposed
     def delete(self, id: int):
-        if not self.replikate:
-            self.replikate = self.connects_datanode_manager()
-        datanode = MonitorController.datanodeDAO.delete(id)
-        if datanode:
-            while True:
-                if self.replikate.delete_datanode(id=id):
-                    break
-        return datanode
+        try:
+            session = create_session()
+            with DataNodeDAO(session) as datanode_dao:
+                datanoodle = self.connects_datanode_manager()
+
+                datanode = datanode_dao.delete(id)
+                if datanode:
+                    while True:
+                        if datanoodle.delete_datanode(id=id):
+                            break
+                return datanode
+        except Exception as e:
+            raise e
+
     @rpyc.exposed
-    def check_alias(self, id, alias):
-        datanode = MonitorController.datanodeDAO.find(alias=alias)
-        if not datanode:
-            return None
-        return datanode.id == id
+    def check_alias(self, id: int, alias: str):
+        try:
+            session = create_session()
+            with DataNodeDAO(session) as datanode_dao:
+                datanode = datanode_dao.find(alias=alias)
+                if not datanode:
+                    return None
+                return datanode.id == id
+        except Exception as e:
+            raise e
+
     @rpyc.exposed
-    def check_online(self, id, alias):
-        datanode = MonitorController.datanodeDAO.find(alias=alias)
-        if not datanode:
-            return None
-        return datanode.id == id and datanode.status == 'Online'
+    def check_online(self, id: int, alias: str):
+        try:
+            session = create_session()
+            with DataNodeDAO(session) as datanode_dao:
+                datanode = datanode_dao.find(alias=alias)
+                if not datanode:
+                    return None
+                return datanode.id == id and datanode.status == 'Online'
+        except Exception as e:
+            raise e
+
     @rpyc.exposed
     def ping(self, id: int):
-        datanode = MonitorController.datanodeDAO.set_status(id, 'Online')
-        return datanode.status
+        try:
+            session = create_session()
+            with DataNodeDAO(session) as datanode_dao:
+                datanode = datanode_dao.set_status(id, 'Online')
+                return datanode.status
+        except Exception as e:
+            raise e

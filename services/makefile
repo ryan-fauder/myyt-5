@@ -1,10 +1,10 @@
-.PHONY: run_netscanner run_sharecode
+.PHONY: run_netscanner run_replikate
 
 run_netscanner:
-	python3 network-reply/netscanner.py
+	python3 netscanner/app.py
 
-run_sharecode:
-	python3 share-code/app.py
+run_replikate:
+	python3 replikate/app.py
 
-run_fakeclient:
-	python3 fake-client/app.py
+run_overloader:
+	python3 overloader/fake-client/app.py
