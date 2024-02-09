@@ -1,15 +1,15 @@
 import threading
-import time
 from fakeclient import FakeClient
+from environment import DOWNLOAD_PATH, UPLOAD_PATH
 
 def upload_thread(client_id, file_path):
-    fakeclient = FakeClient(client_id)
-    print(f"Cliente {client_id} realizando upload do arquivo {file_path}")
-    fakeclient.upload()
+    fakeclient = FakeClient(client_id, DOWNLOAD_PATH, UPLOAD_PATH)
+    print(f"Cliente {client_id} realizando upload do arquivo {UPLOAD_PATH}/{file_path}")
+    fakeclient.upload(file_path)
     print(f"Upload do Cliente {client_id} concluído")
 
 def download_thread(client_id, video_id):
-    fakeclient = FakeClient(client_id)
+    fakeclient = FakeClient(client_id, DOWNLOAD_PATH, UPLOAD_PATH)
     print(f"Cliente {client_id} realizando download do vídeo com ID {video_id}")
     fakeclient.download(video_id)
     print(f"Download do Cliente {client_id} concluído")

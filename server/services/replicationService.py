@@ -48,14 +48,13 @@ class ReplicationService:
     @staticmethod
     def stream(id, session = create_session()):
         try:
-            with ReplicationService.loadBalancer, VideoInfoDAO(session) as video_info_dao:
-                datanode = ReplicationService.loadBalancer.find_datanode(id)
-                datanode_host, datanode_port = datanode
-                connection = rpyc.connect(datanode_host, datanode_port)
-                datanode_server = connection.root
-                response = datanode_server.stream(id)
-                if response:
-                    return response
+            with VideoInfoDAO(session) as video_info_dao:
+                datanode_alias = ReplicationService.loadBalancer.find_datanode(id)
+                if datanode_alias:
+                    playkite = Playkite(datanode_alias)
+                    response = playkite.stream_video(id)
+                    if response:
+                        return response
         except Exception as e:
             print('Um erro na replicação ocorreu')
             raise e

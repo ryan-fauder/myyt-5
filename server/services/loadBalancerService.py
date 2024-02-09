@@ -6,7 +6,7 @@ from session import create_session
 class LoadBalancerService:
     replica_factor = 3
 
-    def filter_online_datanodes(self, datanodes):
+    def filter_online_datanodes(self, datanodes) -> list[str]:
         selected_datanodes = []
         try:
             monitorate = Monitorate()
@@ -37,7 +37,7 @@ class LoadBalancerService:
             raise e
         return []
 
-    def list_datanodes(self, id_video, session = create_session()):
+    def list_datanodes(self, id_video, session = create_session()) -> list[str]:
         try:
             with VideoInfoDAO(session) as video_info_dao:
                 datanodes = video_info_dao.datanodes(id_video)
@@ -50,11 +50,11 @@ class LoadBalancerService:
             raise e
         return []
 
-    def find_datanode(self, id_video):
+    def find_datanode(self, id_video) -> str:
         datanodes = self.list_datanodes(id_video)
         if datanodes:
             return datanodes[0]
-        return []
+        return 
 
 if(__name__ == "__main__"):
     loadBalancer = LoadBalancerService()

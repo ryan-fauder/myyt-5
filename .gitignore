@@ -2,3 +2,4 @@ env/
 global-environment.py
 global-interfaces.py
 */__pycache__/
+*.pyc

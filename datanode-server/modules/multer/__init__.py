@@ -23,15 +23,17 @@ class Multer:
             raise RuntimeError(f"Erro ao escrever o arquivo: {e}")
 
     def read_file(self, filename: str):
+        def file_reader(file):
+            while True:
+                chunk = file.read(1024)
+                if not chunk:
+                    break
+                yield chunk
         try:
             file_path = os.path.join(self.path, filename)
-            if os.path.exists(file_path):
-                with open(file_path, 'rb') as file:
-                    while True:
-                        chunk = file.read(1024)
-                        if not chunk:
-                            break
-                        yield chunk
+            if os.path.exists(self.path):
+                file = open(file_path, 'rb')
+                return file_reader(file)
             else:
                 raise FileNotFoundError(f"O arquivo '{filename}' não foi encontrado no diretório '{self.path}'.")
         except Exception as e:

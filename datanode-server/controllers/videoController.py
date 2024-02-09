@@ -4,14 +4,19 @@ from modules.multer import Multer
 from modules.playkite import AbstractPlaykite
 from session import create_session
 from environment import UPLOAD_FILE_PATH
-
+from interfaces import VideoDTO
 @rpyc.service
 class VideoController(rpyc.Service, AbstractPlaykite):
     multer = Multer(UPLOAD_FILE_PATH)
     
     @rpyc.exposed
-    def store(self, id, title, description, file_generator, size):
+    def store(self, body: VideoDTO) -> VideoDTO:
         try:
+            id = body['id']
+            title = body['title']
+            description = body['description']
+            file_generator = body['file_generator']
+            size = body['size']
             session = create_session()
             with VideoDAO(session) as dao:
                 path = self.multer.write_file(file_generator)
@@ -57,5 +62,7 @@ class VideoController(rpyc.Service, AbstractPlaykite):
         session = create_session()
         with VideoDAO(session) as dao:
             video = dao.get(id)
-            file_generator = self.multer.read_file(video.path)
-            return file_generator            
+            if video:
+                filename = video.path.replace(f"{UPLOAD_FILE_PATH}/", "")
+                file_generator = self.multer.read_file(filename)
+                return file_generator            
