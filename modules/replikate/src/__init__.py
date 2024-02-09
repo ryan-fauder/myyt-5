@@ -7,6 +7,7 @@ class Replikate:
     def __init__(self, service_name):
         try:
             connection = rpyc.connect_by_service(service_name)
+            connection._config['sync_request_timeout'] = None
             self.server = connection.root
         except ConnectionRefusedError as cre:
             print(f"Falha ao tentar se conectar ao servidor Replikate {service_name}: {cre}")

@@ -17,8 +17,9 @@ class VideoController(rpyc.Service, AbstractPlaykite):
             description = body['description']
             file_generator = body['file_generator']
             size = body['size']
-            session = create_session()
             path = self.multer.write_file(file_generator)
+
+            session = create_session()
             with VideoDAO(session) as dao:
                 new_video = dao.add(id, title, description, path, size)
                 return new_video.dict()

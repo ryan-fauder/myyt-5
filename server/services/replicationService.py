@@ -24,7 +24,7 @@ class ReplicationService:
                     response = playkite.store_video(video)
                     if response:
                         video_info_dao.associateDatanode(id, datanode)
-                return response
+                        return response
         except Exception as e:
             print('Um erro na replicação ocorreu')
             raise e

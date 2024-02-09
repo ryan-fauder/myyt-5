@@ -9,6 +9,7 @@ class Datanoodle:
         try:
             if service_name.startswith('DATANOODLE_'):
                 connection = rpyc.connect_by_service(service_name)
+                connection._config['sync_request_timeout'] = None
                 self.server: AbstractDataNoodle = connection.root
             else:
                 raise InvalidServiceNameError(f"O nome do serviço {service_name} não é válido.")

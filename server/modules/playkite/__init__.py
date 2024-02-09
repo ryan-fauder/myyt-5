@@ -10,6 +10,7 @@ class Playkite:
         try:
             if service_name.startswith('PLAYKITE_'):
                 connection = rpyc.connect_by_service(service_name)
+                connection._config['sync_request_timeout'] = None
                 self.server: AbstractPlaykite = connection.root
             else:
                 raise InvalidServiceNameError(f"O nome do serviço {service_name} não é válido.")
