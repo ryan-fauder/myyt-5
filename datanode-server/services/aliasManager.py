@@ -18,10 +18,13 @@ def get_local_alias(monitorate):
                 return None, None
     return id, alias
 def get_alias(monitorate):
-    id, alias = get_local_alias(monitorate)
-    if not id or not alias:
-        id, alias = monitorate.register_datanode()
-        if id and alias:
-            with open(ALIAS_FILE, 'w') as f:
-                f.write(f"{id}, {alias}")
-    return id, alias
+    try:
+        id, alias = get_local_alias(monitorate)
+        if not id or not alias:
+            id, alias = monitorate.register_datanode()
+            if id and alias:
+                with open(ALIAS_FILE, 'w') as f:
+                    f.write(f"{id}, {alias}")
+        return id, alias
+    except:
+        return None, None
