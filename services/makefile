@@ -11,7 +11,7 @@ run_replikate:
 	@if [ "$(CURDIR)" != "replikate" ]; then \
 		echo "Entrando na pasta..."; \
 		cd replikate; \
-		python3 replikate/app.py $(dir); \
+		python3 app.py $(dir); \
 	fi
 
 run_overloader:
